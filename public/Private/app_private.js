@@ -10,48 +10,35 @@ socket.on('connect', () => {
 
  //Listen for an event named 'message-share' from the server
  socket.on('message-share', (data) => {
-  // console.log(data);
-
   drawEllipse(data);
-
 });
 
 //In global scope
-let myRed, myGreen, myBlue;
-let myDiameter;
-
+let myDiameter = 10;
 let circles = [];
-let begin;
+let code;
+let passwords = [
+  "a3d7k", "p2x8j", "l9m5n", "z8r4y", "q1w6p",
+  "t7b3v", "u9k2d", "m5p4j", "x3c7b", "e2r9q",
+  "y8f5w", "d6l2z", "n1p7k", "v3h9y", "s5j2d",
+  "k7u8p", "a9m6n", "t4r2b", "y3x7q", "l1z5v",
+  "p8f4n", "q9j3w", "r2k7y", "d5h1z", "s4n8v",
+  "u3m9b", "k6x2q", "j8r4d", "l2t5n", "m7y1p"
+];
   
-function preload() {
-    begin = loadImage("begin.png");
-  }
 
   function setup(){
     createCanvas(windowWidth, windowHeight);
     imageMode(CENTER);
     noStroke();
     randomSeed(99);
-
-    //Inside setup
-    //Generate random fill values
-    myRed = random(150,255);
-    myGreen = random(100,230)
-    myBlue = random(170,255);
-
-    //Generate random ellipse size
-    myDiameter = 10;
-
+  
     mazePath();
 }
 function draw() {
     background(220);
     drawCircles();
     touchCircles();
-
-    // let imgX = windowWidth / 2;
-    // let imgY = windowHeight / 2;
-    // image(begin, imgX, imgY, begin.width / 3.5, begin.height / 3.5);
 
   }
 
@@ -65,7 +52,7 @@ function mouseMoved() {
 
 loop(); // Redraw when the mouse moves
     setTimeout(noLoop, 50); // Stop drawing after a short delay
-    socket.emit('message', { x: mouseX, y: mouseY, r: myRed, g: myGreen, b: myBlue, d: myDiameter });
+    socket.emit('message', { x: mouseX, y: mouseY, d: myDiameter });
 }
 
 function touchCircles() {
@@ -84,7 +71,7 @@ function touchCircles() {
       circle.r = random(150, 255);
       circle.g = random(100, 230);
       circle.b = random(170, 255);
-      console.log(`Circle ${i} touched!`);
+      // console.log(`Circle ${i} touched!`);
     }
   }
 }
@@ -102,7 +89,7 @@ function mazePath() {
         r: random(150, 255),
         g: random(100, 230),
         b: random(170, 255),
-        // a: random(50, 255)
+        a: random(50, 255)
       };
   
       let overlapping = false;
@@ -132,8 +119,12 @@ function mazePath() {
     }
   }
 
+    // Generate a random index from 0 to the length of the passwords array
+    let indexPos = Math.floor(Math.random() * passwords.length);
+    code = passwords[indexPos];
+
   //Input room name
-let roomName = window.prompt("Create or Join a room");
+let roomName = window.prompt("Enter room with code: " + code);
 console.log(roomName);
 
 //Check if a name was entered
