@@ -18,6 +18,27 @@ server.listen(port, () => {
 let io = require("socket.io");
 io = new io.Server(server);
 
+//Global variables
+let mazers = {};
+let timer = {}; 
+
+//Calculate distance between mouse positions
+function getDistance(x1, y1, x2, y2) {
+  return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+}
+
+//Get coordinates of halfway between two users
+function getMidpoint(x1, y1, x2, y2) {
+  let midX = (x1 + x2) / 2;
+  let midY = (y1 + y2) / 2;
+  return { x: midX, y: midY };
+}
+
+//Create a key to identify a pair of users
+function getPairKey(id1, id2) {
+  return [id1, id2].sort().join('-');
+}
+
 //Listen for a client to connect and disconnect
 io.on("connection", (socket) => {
   console.log("We have a new client: " + socket.id);
